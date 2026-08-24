@@ -5,6 +5,7 @@ import { Navbar } from '@/components/navbar'
 import { Hero } from '@/components/hero'
 import { About } from '@/components/about'
 import { CompanyVideo } from '@/components/company-video'
+import { Gallery } from '@/components/gallery'
 import { Services } from '@/components/services'
 import { WhyUs } from '@/components/why-us'
 import { Process } from '@/components/process'
@@ -21,6 +22,7 @@ export default function Page() {
         <Hero />
         <About />
         <CompanyVideo />
+        <Gallery />
         <Services />
         <WhyUs />
         <Process />

@@ -5,9 +5,9 @@ import { contact, whatsappLink } from '@/lib/media'
 import { Reveal } from '@/components/reveal'
 
 const details = [
-  { icon: Phone, label: 'Call us', value: contact.phoneDisplay, href: `tel:${contact.phoneDisplay.replace(/\s/g, '')}` },
+  { icon: Phone, label: 'Call us', value: contact.phoneDisplay, href: `tel:${contact.phoneDisplay[0].replace(/\s/g, '')}` },
   { icon: Mail, label: 'Email', value: contact.email, href: `mailto:${contact.email}` },
-  { icon: MapPin, label: 'Location', value: contact.address },
+  { icon: MapPin, label: 'Location', value: contact.office },
 ]
 
 export function Contact() {
@@ -58,7 +58,13 @@ export function Contact() {
                         <span className="block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                           {detail.label}
                         </span>
-                        <span className="block font-medium text-foreground">{detail.value}</span>
+                        <span className="block font-medium text-foreground">
+                           {Array.isArray(detail.value) ? (
+                              detail.value.map((line) => <span key={line} className="block">{line}</span>)
+                                 ) : (
+                                    detail.value
+                                   )}
+                              </span>
                       </span>
                     </div>
                   )

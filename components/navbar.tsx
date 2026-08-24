@@ -44,7 +44,7 @@ export function Navbar() {
           <span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground">
             <Leaf className="size-5" />
           </span>
-          TJ & SONS SDN BHD
+          TJ & SONS HOLDINGS SDN BHD
         </a>
 
         <div className="hidden items-center gap-8 md:flex">

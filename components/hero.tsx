@@ -98,6 +98,9 @@ export function Hero() {
           <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm">
             Eco-Friendly · Professional · Reliable
           </p>
+          <p className="mb-3 font-display text-lg font-semibold italic text-lime sm:text-xl">
+            "You Dump, We Pump"
+          </p>
 
           <h1 className="text-balance font-display text-4xl font-semibold leading-[1.05] text-white sm:text-5xl lg:text-6xl">
             Keeping the Environment{' '}

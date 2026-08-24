@@ -8,13 +8,13 @@ const services = [
     icon: Droplets,
     title: 'Septic Tank Cleaning',
     desc: 'Thorough desludging and cleaning using modern vacuum equipment for homes and estates.',
-    detail: 'Fast, odor-controlled and fully sanitized on completion.',
+    detail: 'Fast and odor-controlled on completion.',
   },
   {
     icon: Recycle,
     title: 'Eco Waste Disposal',
     desc: 'Responsible treatment and disposal of waste at licensed processing facilities.',
-    detail: 'Zero illegal dumping — every load is tracked and documented.',
+    detail: 'Zero illegal dumping — every load is properly documented.',
   },
   {
     icon: Truck,
@@ -45,8 +45,7 @@ export function Services() {
             Complete environmental services under one roof
           </h2>
           <p className="mt-5 text-pretty leading-relaxed text-muted-foreground">
-            From routine cleaning to emergency response, every service is delivered with
-            the same care for your property and the planet.
+            We provide reliable and sustainable sewerage management services that meet the needs of our customers and protect public health and the environment at a reasonable price.
           </p>
         </Reveal>
 

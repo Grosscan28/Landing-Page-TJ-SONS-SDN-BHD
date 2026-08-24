@@ -1,6 +1,6 @@
 'use client'
 
-import { Leaf, Clock4, BadgeCheck, ThumbsUp } from 'lucide-react'
+import { Leaf, Clock4, BadgeCheck, ThumbsUp,} from 'lucide-react'
 import { Reveal } from '@/components/reveal'
 
 const reasons = [
@@ -23,6 +23,16 @@ const reasons = [
     icon: ThumbsUp,
     title: 'Trusted by Communities',
     desc: 'Hundreds of estates and businesses count on us year after year.',
+  },
+  {
+    icon: ThumbsUp,
+    title: 'Competitive Pricing',
+    desc: 'We offer fair and transparent pricing quotes without compromising on quality.',
+  },
+   {
+    icon: ThumbsUp,
+    title: 'Experienced Team',
+    desc: 'Our team of technicians have years of experience in the industry, ensuring reliable and efficient maintainence.',
   },
 ]
 

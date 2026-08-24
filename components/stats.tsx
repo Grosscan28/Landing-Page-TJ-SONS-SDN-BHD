@@ -1,7 +1,6 @@
-'use client'
-
 import { CountUp } from '@/components/count-up'
 import { Reveal } from '@/components/reveal'
+import { media } from '@/lib/media'
 
 const stats = [
   { end: 250, suffix: '+', label: 'Estates Serviced' },
@@ -37,10 +36,11 @@ export function Stats() {
             The Proof
           </p>
           <h2 className="text-balance text-3xl font-semibold leading-tight text-white sm:text-4xl">
-            Numbers that reflect our commitment
+            Numbers and registered vendors that reflect our commitment
           </h2>
         </Reveal>
 
+        {/* Numbers */}
         <div className="grid gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, i) => (
             <Reveal
@@ -55,6 +55,24 @@ export function Stats() {
             </Reveal>
           ))}
         </div>
+
+        {/* Vendor logos grid */}
+<Reveal delay={200} className="mt-20">
+  <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
+    Trusted by these companies
+  </p>
+  <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6">
+    {media.vendorLogos.map((src) => (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        key={src}
+        src={src || '/placeholder.svg'}
+        alt="Vendor company logo"
+        className="h-10 w-auto object-contain opacity-90 transition-opacity duration-200 hover:opacity-100 sm:h-12"
+      />
+    ))}
+  </div>
+</Reveal>
       </div>
     </section>
   )

@@ -101,7 +101,7 @@ export function CompanyVideo() {
               <X className="size-5" />
             </button>
 
-            <div className="overflow-hidden rounded-2xl bg-black shadow-2xl">
+            <div className="rounded-2xl bg-black shadow-2xl">
               {media.companyProfileVideo ? (
                 <video
                   className="aspect-video w-full"

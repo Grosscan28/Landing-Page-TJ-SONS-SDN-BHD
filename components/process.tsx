@@ -47,7 +47,7 @@ export function Process() {
             How It Works
           </p>
           <h2 className="text-balance text-3xl font-semibold leading-tight text-foreground sm:text-4xl lg:text-[2.75rem]">
-            A simple, transparent process
+            A simple, transparent and easy process
           </h2>
         </Reveal>
 

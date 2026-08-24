@@ -15,30 +15,52 @@ export const media = {
   // --- Videos (replace with your real company videos) ---
   // Leave `heroVideo` as an empty string to show only the poster image.
   heroVideo: '', // e.g. '/media/hero.mp4'
-  companyProfileVideo: '', // e.g. '/media/company-profile.mp4'
-
+  companyProfileVideo: '/media/TJ-company-video.mp4',
   // --- Poster / fallback images ---
-  heroPoster: '/media/hero-poster.png',
-  companyProfileThumb: '/media/company-profile-thumb.png',
+  heroPoster: '/media/TJ-V-Group.JPG',
+  companyProfileThumb: '/media/TJ-Greater-Group.JPG',
 
   // --- Section imagery ---
-  aboutMain: '/media/about-main.png',
-  aboutSecondary: '/media/about-secondary.png',
+  aboutMain: '/media/TJ-About-Big.JPG',
+  aboutSecondary: '/media/TJ-About-Small.JPG',
+
+ workPhotos: [
+    '/Work-photos/Work-2.JPG',
+    '/Work-photos/Work-3.JPG',
+    '/Work-photos/Work-1.JPG',
+    '/Work-photos/Work-4.JPG',
+    '/Work-photos/Work-5.JPG',
+  ],
+
+  vendorLogos: [
+  '/vendor/Sime-darby.jpg',
+  '/vendor/Boustead.webp',
+  '/vendor/Felcra.png',
+  '/vendor/Felda.png',
+  '/vendor/IOI.jpg',
+  '/vendor/Sawit.png',
+  '/vendor/Sedafiat.png',
+  'vendor/Wilmar.png',
+  'vendor/FGV.png',
+
+],
+
 } as const
 
 export const companyProfile = {
-  videoDuration: '2:48',
+  videoDuration: '4:26',
 } as const
 
 /** Business contact details — update these with your real information. */
 export const contact = {
-  companyName: 'Verdant',
-  phoneDisplay: '+62 812 3456 7890',
+  companyName: 'TJ & SONS HOLDINGS SDN BHD',
+  phoneDisplay:['+60 19 881 2373 Jocelyn', '+60 19 853 9368 Sunil'],
   // International format without "+" or spaces for the WhatsApp deep link.
-  whatsappNumber: '6281234567890',
-  whatsappMessage: 'Hello Verdant, I would like to request a service.',
-  email: 'hello@verdant.eco',
+  whatsappNumber: '60198812373',
+  whatsappMessage: 'Hello TJ & SONS HOLDINGS SDN BHD, I would like to request a service.',
+  email: 'tjandsonsholdings@gmail.com',
   address: 'Sandakan, Sabah, Malaysia',
+  office:  '1st Floor Bangunan Sabah, Jalan Pelabuhan Lama, 90000, Sandakan, Sabah'
 } as const
 
 export function whatsappLink(message: string = contact.whatsappMessage) {
