@@ -127,8 +127,8 @@ export function Coverage() {
           </div>
         </div>
 
-        <div className="relative min-h-[420px] overflow-hidden rounded-[2rem] border border-border/70 bg-[#eef7f5] p-5 shadow-sm sm:p-8">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(20,150,145,0.13),transparent_55%)]" />
+        <div className="relative min-h-[420px] overflow-hidden rounded-[2rem] bg-[#f1f7ff] p-5 shadow-sm sm:p-8">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(30,120,220,0.10),transparent_55%)]" />
           <div className="relative flex h-full min-h-[380px] items-center justify-center">
             {geojson && bounds ? (
               <div className="relative w-full max-w-[620px]">
@@ -142,14 +142,22 @@ export function Coverage() {
                     const stateName = getStateName(feature)
                     const isHovered = hoveredState === stateName
                     const isSabah = stateName.toLowerCase() === 'sabah'
+                    const baseFill = isSabah ? '#5fc6a8' : '#b9dcff'
+                    const fill = isHovered
+                      ? isSabah
+                        ? '#4fb998'
+                        : '#9fceff'
+                      : baseFill
 
                     return getRings(feature).map((ring, ringIndex) => (
                       <polygon
                         key={`state-${featureIndex}-${ringIndex}`}
                         points={ring.map((point) => project(point, bounds)).join(' ')}
-                        fill={isSabah ? '#5fc6a8' : '#b9dcff'}
-                        fillOpacity={isHovered ? 0.78 : isSabah ? 0.92 : 0.72}
-                        stroke="none"
+                        fill={fill}
+                        fillOpacity={isSabah ? 0.96 : 0.78}
+                        stroke={fill}
+                        strokeWidth="2.5"
+                        strokeLinejoin="round"
                         className="cursor-pointer transition-[fill,fill-opacity] duration-200"
                         onMouseEnter={() => setHoveredState(stateName)}
                         onMouseLeave={() => setHoveredState(null)}
