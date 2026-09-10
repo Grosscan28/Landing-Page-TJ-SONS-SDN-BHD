@@ -1,30 +1,24 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Inter, Sora } from 'next/font/google'
+import { IBM_Plex_Sans } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({
+const plexSans = IBM_Plex_Sans({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-plex-sans',
   display: 'swap',
-})
-
-const sora = Sora({
-  subsets: ['latin'],
-  variable: '--font-sora',
-  display: 'swap',
+  weight: ['400', '500', '600', '700'],
 })
 
 export const metadata: Metadata = {
-  title: 'Verdant — Eco-Friendly Septic & Environmental Services',
+  title: 'TJ & SONS HOLDINGS SDN BHD — Environmental Services',
   description:
-    'Professional, licensed and eco-friendly septic tank cleaning and environmental services. Keeping the environment clean, safe and sustainable.',
-  generator: 'v0.app',
+    'Professional septic tank cleaning and environmental services across Sabah, Malaysia.',
 }
 
 export const viewport: Viewport = {
   colorScheme: 'light',
-  themeColor: '#18331f',
+  themeColor: '#005AD9',
 }
 
 export default function RootLayout({
@@ -33,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${sora.variable} bg-background`}>
+    <html lang="en" className={`${plexSans.variable} bg-background`}>
       <body className="antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
