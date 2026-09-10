@@ -11,13 +11,17 @@ export const media = {
   companyProfileThumb: mediaPath('media', 'TJ-Greater-Group.JPG'),
   aboutMain: mediaPath('media', 'TJ-About-Big.JPG'),
   aboutSecondary: mediaPath('media', 'TJ-About-Small.JPG'),
+
   workPhotos: [
+    mediaPath('Work-photos', 'Work-1.JPG'),
     mediaPath('Work-photos', 'Work-2.JPG'),
     mediaPath('Work-photos', 'Work-3.JPG'),
-    mediaPath('Work-photos', 'Work-1.JPG'),
     mediaPath('Work-photos', 'Work-4.JPG'),
     mediaPath('Work-photos', 'Work-5.JPG'),
   ],
+
+  companyLogo: mediaPath('Company-logo', 'TJ-logo.png'),
+
   vendorLogos: [
     mediaPath('vendor', 'CIDB.png'),
     mediaPath('vendor', 'Boustead.webp'),
