@@ -25,9 +25,9 @@ export const media = {
   aboutSecondary: '/media/TJ-About-Small.JPG',
 
  workPhotos: [
+    '/Work-photos/Work-1.JPG',
     '/Work-photos/Work-2.JPG',
     '/Work-photos/Work-3.JPG',
-    '/Work-photos/Work-1.JPG',
     '/Work-photos/Work-4.JPG',
     '/Work-photos/Work-5.JPG',
   ],
