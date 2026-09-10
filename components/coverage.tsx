@@ -13,6 +13,7 @@ type Feature = { type: 'Feature'; geometry: Geometry }
 type FeatureCollection = { type: 'FeatureCollection'; features: Feature[] }
 
 type Bounds = { minX: number; maxX: number; minY: number; maxY: number }
+type ProjectedPoint = [number, number]
 
 const SABAH_GEOJSON =
   'https://raw.githubusercontent.com/atifmustaffa/malaysia-geojson/master/states/sabah.district.geojson'
@@ -21,7 +22,7 @@ const MAP_WIDTH = 620
 const MAP_HEIGHT = 500
 const MAP_PADDING = 24
 const MAP_STROKE = '#3f5d63'
-const MAP_STROKE_WIDTH = 2.4
+const MAP_STROKE_WIDTH = 1.2
 
 function collectPositions(geojson: FeatureCollection) {
   return geojson.features.flatMap((feature) => {
@@ -30,9 +31,14 @@ function collectPositions(geojson: FeatureCollection) {
   })
 }
 
-function project([longitude, latitude]: Position, bounds: Bounds) {
+function projectPoint([longitude, latitude]: Position, bounds: Bounds): ProjectedPoint {
   const x = MAP_PADDING + ((longitude - bounds.minX) / (bounds.maxX - bounds.minX)) * (MAP_WIDTH - MAP_PADDING * 2)
   const y = MAP_HEIGHT - MAP_PADDING - ((latitude - bounds.minY) / (bounds.maxY - bounds.minY)) * (MAP_HEIGHT - MAP_PADDING * 2)
+  return [x, y]
+}
+
+function project([longitude, latitude]: Position, bounds: Bounds) {
+  const [x, y] = projectPoint([longitude, latitude], bounds)
   return `${x.toFixed(2)},${y.toFixed(2)}`
 }
 
@@ -40,6 +46,29 @@ function getRings(feature: Feature): Ring[] {
   return feature.geometry.type === 'Polygon'
     ? feature.geometry.coordinates
     : feature.geometry.coordinates.flat()
+}
+
+function buildBoundaryPath(geojson: FeatureCollection, bounds: Bounds) {
+  const segments = new Set<string>()
+  const commands: string[] = []
+
+  for (const feature of geojson.features) {
+    for (const ring of getRings(feature)) {
+      for (let i = 0; i < ring.length - 1; i += 1) {
+        const a = projectPoint(ring[i], bounds)
+        const b = projectPoint(ring[i + 1], bounds)
+        const aKey = `${a[0].toFixed(4)},${a[1].toFixed(4)}`
+        const bKey = `${b[0].toFixed(4)},${b[1].toFixed(4)}`
+        const key = aKey < bKey ? `${aKey}|${bKey}` : `${bKey}|${aKey}`
+
+        if (segments.has(key)) continue
+        segments.add(key)
+        commands.push(`M ${a[0].toFixed(2)} ${a[1].toFixed(2)} L ${b[0].toFixed(2)} ${b[1].toFixed(2)}`)
+      }
+    }
+  }
+
+  return commands.join(' ')
 }
 
 export function Coverage() {
@@ -72,6 +101,11 @@ export function Coverage() {
       maxY: Math.max(...ys),
     }
   }, [geojson])
+
+  const boundaryPath = useMemo(
+    () => (geojson && bounds ? buildBoundaryPath(geojson, bounds) : ''),
+    [geojson, bounds]
+  )
 
   return (
     <section id="coverage" className="relative overflow-hidden bg-background py-24 sm:py-32">
@@ -117,7 +151,6 @@ export function Coverage() {
                 role="img"
                 aria-label="Map showing Sabah districts"
               >
-                {/* District fills are rendered first. */}
                 {geojson.features.map((feature, featureIndex) =>
                   getRings(feature).map((ring, ringIndex) => (
                     <polygon
@@ -129,21 +162,15 @@ export function Coverage() {
                   ))
                 )}
 
-                {/* Every district boundary is rendered in one uniform pass. */}
-                {geojson.features.map((feature, featureIndex) =>
-                  getRings(feature).map((ring, ringIndex) => (
-                    <polyline
-                      key={`line-${featureIndex}-${ringIndex}`}
-                      points={ring.map((point) => project(point, bounds)).join(' ')}
-                      fill="none"
-                      stroke={MAP_STROKE}
-                      strokeWidth={MAP_STROKE_WIDTH}
-                      strokeLinejoin="round"
-                      strokeLinecap="round"
-                      vectorEffect="non-scaling-stroke"
-                    />
-                  ))
-                )}
+                <path
+                  d={boundaryPath}
+                  fill="none"
+                  stroke={MAP_STROKE}
+                  strokeWidth={MAP_STROKE_WIDTH}
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  vectorEffect="non-scaling-stroke"
+                />
               </svg>
             ) : (
               <div className="h-[360px] w-full max-w-[620px] animate-pulse rounded-[40%] bg-primary/5" />
