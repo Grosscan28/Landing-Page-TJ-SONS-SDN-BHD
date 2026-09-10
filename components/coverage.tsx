@@ -68,8 +68,7 @@ export function Coverage() {
       .then((response) => response.json())
       .then((data: FeatureCollection) => {
         const malaysiaFeatures = data.features.filter((feature) => {
-          const country = getCountryName(feature).toLowerCase()
-          return country === 'malaysia'
+          return getCountryName(feature).toLowerCase() === 'malaysia'
         })
         if (active) setGeojson({ ...data, features: malaysiaFeatures })
       })
@@ -148,8 +147,8 @@ export function Coverage() {
                       <polygon
                         key={`state-${featureIndex}-${ringIndex}`}
                         points={ring.map((point) => project(point, bounds)).join(' ')}
-                        fill={isHovered ? '#b8e9e5' : isSabah ? '#ccefeb' : '#e5f3f2'}
-                        fillOpacity={isHovered ? 1 : 0.92}
+                        fill={isSabah ? '#5fc6a8' : '#b9dcff'}
+                        fillOpacity={isHovered ? 0.78 : isSabah ? 0.92 : 0.72}
                         stroke="none"
                         className="cursor-pointer transition-[fill,fill-opacity] duration-200"
                         onMouseEnter={() => setHoveredState(stateName)}
@@ -163,7 +162,7 @@ export function Coverage() {
                   <div className="pointer-events-none absolute right-3 top-3 rounded-xl border border-white/80 bg-white/90 px-3 py-2 shadow-md backdrop-blur-md">
                     <p className="text-xs font-semibold text-foreground">{hoveredState}</p>
                     <p className="mt-0.5 text-[11px] text-muted-foreground">
-                      {hoveredState.toLowerCase() === 'sabah' ? 'Current service area' : 'Malaysia'}
+                      {hoveredState.toLowerCase() === 'sabah' ? 'Current service area' : 'Coming soon'}
                     </p>
                   </div>
                 )}
@@ -173,11 +172,15 @@ export function Coverage() {
             )}
 
             <div className="absolute bottom-4 left-4 rounded-2xl border border-white/70 bg-white/90 px-4 py-3 shadow-lg backdrop-blur-md sm:bottom-7 sm:left-7">
-              <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                <span className="size-2.5 rounded-full bg-primary shadow-[0_0_0_5px_rgba(20,150,145,0.12)]" />
+              <div className="flex items-center gap-3 text-sm font-semibold text-foreground">
+                <span className="size-2.5 rounded-full bg-[#5fc6a8]" />
                 Sabah
+                <span className="text-muted-foreground">Current service area</span>
               </div>
-              <p className="mt-0.5 text-xs text-muted-foreground">Current service area</p>
+              <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
+                <span className="size-2.5 rounded-full bg-[#b9dcff]" />
+                Coming soon
+              </div>
             </div>
           </div>
         </div>
