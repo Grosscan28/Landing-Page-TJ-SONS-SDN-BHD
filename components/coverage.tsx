@@ -17,7 +17,6 @@ type Feature = {
 type FeatureCollection = { type: 'FeatureCollection'; features: Feature[] }
 type Bounds = { minX: number; maxX: number; minY: number; maxY: number }
 
-// Simpler Natural Earth state boundaries: fewer vertices and cleaner hover behavior.
 const MALAYSIA_GEOJSON =
   'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_1_states_provinces.geojson'
 
@@ -149,13 +148,10 @@ export function Coverage() {
                       <polygon
                         key={`state-${featureIndex}-${ringIndex}`}
                         points={ring.map((point) => project(point, bounds)).join(' ')}
-                        fill={isHovered ? '#c2ece8' : isSabah ? '#ccefeb' : '#e5f3f2'}
-                        fillOpacity={isHovered ? 1 : 0.9}
-                        stroke={isHovered ? '#168f8a' : '#c8dedd'}
-                        strokeWidth={isHovered ? 1.7 : 0.65}
-                        strokeLinejoin="round"
-                        vectorEffect="non-scaling-stroke"
-                        className="cursor-pointer transition-[fill,stroke,stroke-width] duration-200"
+                        fill={isHovered ? '#b8e9e5' : isSabah ? '#ccefeb' : '#e5f3f2'}
+                        fillOpacity={isHovered ? 1 : 0.92}
+                        stroke="none"
+                        className="cursor-pointer transition-[fill,fill-opacity] duration-200"
                         onMouseEnter={() => setHoveredState(stateName)}
                         onMouseLeave={() => setHoveredState(null)}
                       />
