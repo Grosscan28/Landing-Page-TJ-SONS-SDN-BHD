@@ -13,11 +13,11 @@ export const media = {
   aboutSecondary: mediaPath('media', 'TJ-About-Small.JPG'),
 
   workPhotos: [
-    mediaPath('Work-photos', 'Work-1.JPG'),
-    mediaPath('Work-photos', 'Work-2.JPG'),
-    mediaPath('Work-photos', 'Work-3.JPG'),
-    mediaPath('Work-photos', 'Work-4.JPG'),
-    mediaPath('Work-photos', 'Work-5.JPG'),
+    mediaPath('Work-photos', 'Work-1.jpg'),
+    mediaPath('Work-photos', 'Work-2.jpg'),
+    mediaPath('Work-photos', 'Work-3.jpg'),
+    mediaPath('Work-photos', 'Work-4.jpg'),
+    mediaPath('Work-photos', 'Work-5.jpg'),
   ],
 
   companyLogo: mediaPath('Company-logo', 'TJ-logo.png'),
