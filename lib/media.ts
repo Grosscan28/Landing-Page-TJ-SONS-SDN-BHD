@@ -3,7 +3,7 @@
 export const media = {
   heroVideo: '',
   companyProfileVideo: '/media/TJ-company-video.mp4',
-  heroPoster: '/media/hero-team.webp',
+  heroPoster: '/media/TJ-V-Group.JPG',
   companyProfileThumb: '/media/TJ-Greater-Group.JPG',
 
   aboutMain: '/media/TJ-About-Big.JPG',
@@ -18,15 +18,16 @@ export const media = {
   ],
 
   vendorLogos: [
-    '/vendor/Sime-darby.jpg',
+    '/vendor/CIDB.png',
     '/vendor/Boustead.webp',
+    '/vendor/Sime-darby.jpg',
     '/vendor/Felcra.png',
-    '/vendor/Felda.png',
+    '/vendor/FGV.png',
     '/vendor/IOI.jpg',
+    '/vendor/Felda.png',
     '/vendor/Sawit.png',
     '/vendor/Sedafiat.png',
     '/vendor/Wilmar.png',
-    '/vendor/FGV.png',
   ],
 } as const
 
