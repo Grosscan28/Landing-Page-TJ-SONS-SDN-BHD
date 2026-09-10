@@ -71,7 +71,7 @@ export function CoverageMap() {
 
             <div className="relative aspect-[1.95/1] min-h-[300px] w-full">
               {data ? <>
-                <svg viewBox="0 0 1000 520" className="relative z-10 h-full w-full overflow-visible" role="img" aria-label="Interactive Malaysia service coverage map" shapeRendering="crispEdges">
+                <svg viewBox="0 0 1000 520" className="relative z-10 h-full w-full overflow-visible" role="img" aria-label="Interactive Malaysia service coverage map" shapeRendering="crispEdges" style={{ stroke: 'none' }}>
                   <g>
                     {data.features.map((feature) => {
                       const name = feature.properties.state_name ?? feature.properties.name ?? feature.id ?? 'Unknown state'
@@ -84,6 +84,7 @@ export function CoverageMap() {
                           stroke="none"
                           strokeWidth="0"
                           vectorEffect="none"
+                          style={{ stroke: 'none' }}
                           className="cursor-pointer transition-colors duration-200"
                         />
                       </g>
