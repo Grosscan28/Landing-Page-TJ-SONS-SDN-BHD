@@ -9,19 +9,23 @@ type Geometry =
   | { type: 'Polygon'; coordinates: Ring[] }
   | { type: 'MultiPolygon'; coordinates: Ring[][] }
 
-type Feature = { type: 'Feature'; geometry: Geometry }
+type Feature = {
+  type: 'Feature'
+  properties?: Record<string, unknown>
+  geometry: Geometry
+}
 type FeatureCollection = { type: 'FeatureCollection'; features: Feature[] }
 
 type Bounds = { minX: number; maxX: number; minY: number; maxY: number }
 type ProjectedPoint = [number, number]
 
-const SABAH_GEOJSON =
-  'https://raw.githubusercontent.com/atifmustaffa/malaysia-geojson/master/states/sabah.district.geojson'
+const MALAYSIA_GEOJSON =
+  'https://raw.githubusercontent.com/atifmustaffa/malaysia-geojson/master/malaysia.state.min.geojson'
 
 const MAP_WIDTH = 620
 const MAP_HEIGHT = 500
 const MAP_PADDING = 24
-const MAP_STROKE = '#6f8588'
+const MAP_STROKE = '#5f777b'
 const MAP_STROKE_WIDTH = 1.2
 
 function collectPositions(geojson: FeatureCollection) {
@@ -46,6 +50,11 @@ function getRings(feature: Feature): Ring[] {
   return feature.geometry.type === 'Polygon'
     ? feature.geometry.coordinates
     : feature.geometry.coordinates.flat()
+}
+
+function getStateName(feature: Feature) {
+  const properties = feature.properties ?? {}
+  return String(properties.name ?? properties.NAME_1 ?? properties.state ?? properties.STATE ?? 'Malaysia')
 }
 
 function buildBoundaryPath(geojson: FeatureCollection, bounds: Bounds) {
@@ -73,10 +82,11 @@ function buildBoundaryPath(geojson: FeatureCollection, bounds: Bounds) {
 
 export function Coverage() {
   const [geojson, setGeojson] = useState<FeatureCollection | null>(null)
+  const [hoveredState, setHoveredState] = useState<string | null>(null)
 
   useEffect(() => {
     let active = true
-    fetch(SABAH_GEOJSON)
+    fetch(MALAYSIA_GEOJSON)
       .then((response) => response.json())
       .then((data: FeatureCollection) => {
         if (active) setGeojson(data)
@@ -145,34 +155,53 @@ export function Coverage() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(20,150,145,0.13),transparent_55%)]" />
           <div className="relative flex h-full min-h-[380px] items-center justify-center">
             {geojson && bounds ? (
-              <svg
-                viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
-                className="max-h-[390px] w-full max-w-[620px] overflow-visible"
-                role="img"
-                aria-label="Map showing Sabah districts"
-              >
-                {geojson.features.map((feature, featureIndex) =>
-                  getRings(feature).map((ring, ringIndex) => (
-                    <polygon
-                      key={`fill-${featureIndex}-${ringIndex}`}
-                      points={ring.map((point) => project(point, bounds)).join(' ')}
-                      fill="#dff4f2"
-                      stroke="none"
-                    />
-                  ))
-                )}
+              <div className="relative w-full max-w-[620px]">
+                <svg
+                  viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
+                  className="max-h-[390px] w-full overflow-visible"
+                  role="img"
+                  aria-label="Map of Malaysia states"
+                >
+                  {geojson.features.map((feature, featureIndex) => {
+                    const stateName = getStateName(feature)
+                    const isHovered = hoveredState === stateName
+                    const isSabah = stateName.toLowerCase() === 'sabah'
 
-                <path
-                  d={boundaryPath}
-                  fill="none"
-                  stroke={MAP_STROKE}
-                  strokeOpacity="0.72"
-                  strokeWidth={MAP_STROKE_WIDTH}
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  vectorEffect="non-scaling-stroke"
-                />
-              </svg>
+                    return getRings(feature).map((ring, ringIndex) => (
+                      <polygon
+                        key={`state-${featureIndex}-${ringIndex}`}
+                        points={ring.map((point) => project(point, bounds)).join(' ')}
+                        fill={isHovered || isSabah ? '#ccefeb' : '#dff4f2'}
+                        fillOpacity={isHovered ? 1 : 0.82}
+                        stroke="none"
+                        className="cursor-pointer transition-all duration-200"
+                        onMouseEnter={() => setHoveredState(stateName)}
+                        onMouseLeave={() => setHoveredState(null)}
+                      />
+                    ))
+                  })}
+
+                  <path
+                    d={boundaryPath}
+                    fill="none"
+                    stroke={MAP_STROKE}
+                    strokeWidth={MAP_STROKE_WIDTH}
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                    pointerEvents="none"
+                  />
+                </svg>
+
+                {hoveredState && (
+                  <div className="pointer-events-none absolute right-3 top-3 rounded-xl border border-white/80 bg-white/90 px-3 py-2 shadow-md backdrop-blur-md">
+                    <p className="text-xs font-semibold text-foreground">{hoveredState}</p>
+                    <p className="mt-0.5 text-[11px] text-muted-foreground">
+                      {hoveredState.toLowerCase() === 'sabah' ? 'Current service area' : 'Malaysia'}
+                    </p>
+                  </div>
+                )}
+              </div>
             ) : (
               <div className="h-[360px] w-full max-w-[620px] animate-pulse rounded-[40%] bg-primary/5" />
             )}
