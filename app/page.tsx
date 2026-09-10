@@ -10,6 +10,7 @@ import { Services } from '@/components/services'
 import { WhyUs } from '@/components/why-us'
 import { Process } from '@/components/process'
 import { Stats } from '@/components/stats'
+import { Coverage } from '@/components/coverage'
 import { Contact } from '@/components/contact'
 import { Footer } from '@/components/footer'
 import { whatsappLink } from '@/lib/media'
@@ -27,6 +28,7 @@ export default function Page() {
         <WhyUs />
         <Process />
         <Stats />
+        <Coverage />
         <Contact />
       </main>
       <Footer />
