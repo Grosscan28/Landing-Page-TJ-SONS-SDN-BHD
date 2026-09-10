@@ -15,18 +15,15 @@ type Feature = {
   geometry: Geometry
 }
 type FeatureCollection = { type: 'FeatureCollection'; features: Feature[] }
-
 type Bounds = { minX: number; maxX: number; minY: number; maxY: number }
-type ProjectedPoint = [number, number]
 
+// Simpler Natural Earth state boundaries: fewer vertices and cleaner hover behavior.
 const MALAYSIA_GEOJSON =
-  'https://raw.githubusercontent.com/atifmustaffa/malaysia-geojson/master/malaysia.state.min.geojson'
+  'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_1_states_provinces.geojson'
 
 const MAP_WIDTH = 620
 const MAP_HEIGHT = 500
 const MAP_PADDING = 24
-const MAP_STROKE = '#5f777b'
-const MAP_STROKE_WIDTH = 1.2
 
 function collectPositions(geojson: FeatureCollection) {
   return geojson.features.flatMap((feature) => {
@@ -35,7 +32,7 @@ function collectPositions(geojson: FeatureCollection) {
   })
 }
 
-function projectPoint([longitude, latitude]: Position, bounds: Bounds): ProjectedPoint {
+function projectPoint([longitude, latitude]: Position, bounds: Bounds): [number, number] {
   const x = MAP_PADDING + ((longitude - bounds.minX) / (bounds.maxX - bounds.minX)) * (MAP_WIDTH - MAP_PADDING * 2)
   const y = MAP_HEIGHT - MAP_PADDING - ((latitude - bounds.minY) / (bounds.maxY - bounds.minY)) * (MAP_HEIGHT - MAP_PADDING * 2)
   return [x, y]
@@ -54,30 +51,12 @@ function getRings(feature: Feature): Ring[] {
 
 function getStateName(feature: Feature) {
   const properties = feature.properties ?? {}
-  return String(properties.name ?? properties.NAME_1 ?? properties.state ?? properties.STATE ?? 'Malaysia')
+  return String(properties.name ?? properties.NAME_1 ?? properties.name_en ?? properties.state ?? 'Malaysia')
 }
 
-function buildBoundaryPath(geojson: FeatureCollection, bounds: Bounds) {
-  const segments = new Set<string>()
-  const commands: string[] = []
-
-  for (const feature of geojson.features) {
-    for (const ring of getRings(feature)) {
-      for (let i = 0; i < ring.length - 1; i += 1) {
-        const a = projectPoint(ring[i], bounds)
-        const b = projectPoint(ring[i + 1], bounds)
-        const aKey = `${a[0].toFixed(4)},${a[1].toFixed(4)}`
-        const bKey = `${b[0].toFixed(4)},${b[1].toFixed(4)}`
-        const key = aKey < bKey ? `${aKey}|${bKey}` : `${bKey}|${aKey}`
-
-        if (segments.has(key)) continue
-        segments.add(key)
-        commands.push(`M ${a[0].toFixed(2)} ${a[1].toFixed(2)} L ${b[0].toFixed(2)} ${b[1].toFixed(2)}`)
-      }
-    }
-  }
-
-  return commands.join(' ')
+function getCountryName(feature: Feature) {
+  const properties = feature.properties ?? {}
+  return String(properties.admin ?? properties.ADMIN ?? properties.country ?? '')
 }
 
 export function Coverage() {
@@ -89,7 +68,11 @@ export function Coverage() {
     fetch(MALAYSIA_GEOJSON)
       .then((response) => response.json())
       .then((data: FeatureCollection) => {
-        if (active) setGeojson(data)
+        const malaysiaFeatures = data.features.filter((feature) => {
+          const country = getCountryName(feature).toLowerCase()
+          return country === 'malaysia'
+        })
+        if (active) setGeojson({ ...data, features: malaysiaFeatures })
       })
       .catch(() => {
         if (active) setGeojson(null)
@@ -111,11 +94,6 @@ export function Coverage() {
       maxY: Math.max(...ys),
     }
   }, [geojson])
-
-  const boundaryPath = useMemo(
-    () => (geojson && bounds ? buildBoundaryPath(geojson, bounds) : ''),
-    [geojson, bounds]
-  )
 
   return (
     <section id="coverage" className="relative overflow-hidden bg-background py-24 sm:py-32">
@@ -171,26 +149,18 @@ export function Coverage() {
                       <polygon
                         key={`state-${featureIndex}-${ringIndex}`}
                         points={ring.map((point) => project(point, bounds)).join(' ')}
-                        fill={isHovered || isSabah ? '#ccefeb' : '#dff4f2'}
-                        fillOpacity={isHovered ? 1 : 0.82}
-                        stroke="none"
-                        className="cursor-pointer transition-all duration-200"
+                        fill={isHovered ? '#c2ece8' : isSabah ? '#ccefeb' : '#e5f3f2'}
+                        fillOpacity={isHovered ? 1 : 0.9}
+                        stroke={isHovered ? '#168f8a' : '#c8dedd'}
+                        strokeWidth={isHovered ? 1.7 : 0.65}
+                        strokeLinejoin="round"
+                        vectorEffect="non-scaling-stroke"
+                        className="cursor-pointer transition-[fill,stroke,stroke-width] duration-200"
                         onMouseEnter={() => setHoveredState(stateName)}
                         onMouseLeave={() => setHoveredState(null)}
                       />
                     ))
                   })}
-
-                  <path
-                    d={boundaryPath}
-                    fill="none"
-                    stroke={MAP_STROKE}
-                    strokeWidth={MAP_STROKE_WIDTH}
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                    vectorEffect="non-scaling-stroke"
-                    pointerEvents="none"
-                  />
                 </svg>
 
                 {hoveredState && (
