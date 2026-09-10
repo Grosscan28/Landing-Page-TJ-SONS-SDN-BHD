@@ -1,11 +1,10 @@
-import { Leaf } from 'lucide-react'
-import { contact } from '@/lib/media'
+import { contact, media } from '@/lib/media'
 
 const nav = [
   { label: 'About', href: '#about' },
   { label: 'Services', href: '#services' },
-  { label: 'Why Us', href: '#why-us' },
-  { label: 'Process', href: '#process' },
+  { label: 'Our Work', href: '#our-work' },
+  { label: 'Coverage', href: '#coverage' },
   { label: 'Contact', href: '#contact' },
 ]
 
@@ -18,11 +17,15 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-5 py-14 md:px-8">
         <div className="flex flex-col justify-between gap-10 md:flex-row md:items-start">
           <div className="max-w-sm">
-            <div className="flex items-center gap-2 font-display text-lg font-semibold text-white">
-              <span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground">
-                <Leaf className="size-5" />
+            <div className="flex items-center gap-3 text-white">
+              <img
+                src={media.companyLogo}
+                alt={contact.companyName}
+                className="h-11 w-auto object-contain"
+              />
+              <span className="font-display text-lg font-semibold tracking-tight">
+                {contact.companyName}
               </span>
-              {contact.companyName}
             </div>
             <p className="mt-4 text-sm leading-relaxed text-white/60">
               Keeping the environment clean, safe and sustainable through professional,
@@ -35,7 +38,7 @@ export function Footer() {
               <a
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-white/70 transition-colors hover:text-lime"
+                className="text-sm font-medium text-white/70 transition-colors hover:text-white"
               >
                 {item.label}
               </a>
@@ -44,8 +47,8 @@ export function Footer() {
 
           <div className="text-sm text-white/60">
             {contact.phoneDisplay.map((phone) => (
-    <p key={phone}>{phone}</p>
-    ))}
+              <p key={phone}>{phone}</p>
+            ))}
             <p className="mt-1">{contact.email}</p>
             <p className="mt-1">{contact.office}</p>
           </div>
