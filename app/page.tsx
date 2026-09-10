@@ -7,7 +7,6 @@ import { About } from '@/components/about'
 import { CompanyVideo } from '@/components/company-video'
 import { Gallery } from '@/components/gallery'
 import { Services } from '@/components/services'
-import { WhyUs } from '@/components/why-us'
 import { Process } from '@/components/process'
 import { Stats } from '@/components/stats'
 import { CoverageMap } from '@/components/coverage-map'
@@ -25,7 +24,6 @@ export default function Page() {
         <CompanyVideo />
         <Gallery />
         <Services />
-        <WhyUs />
         <Process />
         <Stats />
         <CoverageMap />
