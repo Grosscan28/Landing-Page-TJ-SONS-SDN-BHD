@@ -28,7 +28,7 @@ export function Navbar() {
     <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-5">
       <nav
         className={cn(
-          'mx-auto flex h-[62px] max-w-6xl items-center justify-between rounded-full border px-3 transition-all duration-300 sm:px-4',
+          'mx-auto flex h-[62px] w-full max-w-7xl items-center justify-between rounded-full border px-3 transition-all duration-300 sm:px-5',
           scrolled
             ? 'border-slate-200/80 bg-white/92 shadow-[0_10px_35px_rgba(15,23,42,0.10)] backdrop-blur-xl'
             : 'border-white/25 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.10)] backdrop-blur-md'
@@ -95,7 +95,7 @@ export function Navbar() {
 
       <div
         className={cn(
-          'mx-auto mt-3 max-w-6xl overflow-hidden rounded-3xl border border-slate-200/80 bg-white/96 shadow-xl backdrop-blur-xl transition-all duration-300 md:hidden',
+          'mx-auto mt-3 w-full max-w-7xl overflow-hidden rounded-3xl border border-slate-200/80 bg-white/96 shadow-xl backdrop-blur-xl transition-all duration-300 md:hidden',
           open ? 'max-h-[420px] opacity-100' : 'max-h-0 border-transparent opacity-0'
         )}
       >
