@@ -47,10 +47,10 @@ export function Hero() {
       <div aria-hidden className="absolute inset-0 bg-[linear-gradient(90deg,rgba(4,22,47,0.82)_0%,rgba(4,22,47,0.52)_44%,rgba(4,22,47,0.16)_80%,rgba(4,22,47,0.34)_100%)]" />
       <div aria-hidden className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,18,39,0.64)_0%,transparent_34%,rgba(3,18,39,0.06)_64%,rgba(3,18,39,0.84)_100%)]" />
 
-      {/* Extra-wide multi-stop fade: no hard color boundary between Hero and About */}
+      {/* Ultra-soft dissolve into the About section. The final fade is deliberately very long so there is no visible seam. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-80 bg-[linear-gradient(to_bottom,transparent_0%,rgba(7,27,52,0.03)_18%,rgba(7,27,52,0.10)_35%,rgba(7,27,52,0.24)_52%,rgba(7,27,52,0.44)_68%,rgba(7,27,52,0.68)_82%,var(--background)_100%)] sm:h-96"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-[34rem] bg-[linear-gradient(to_bottom,transparent_0%,rgba(7,27,52,0.015)_20%,rgba(7,27,52,0.045)_38%,rgba(7,27,52,0.10)_54%,rgba(7,27,52,0.20)_68%,rgba(7,27,52,0.36)_80%,rgba(7,27,52,0.56)_90%,var(--background)_100%)] sm:h-[42rem]"
       />
 
       <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pb-20 pt-28 md:px-8 md:pb-24">
