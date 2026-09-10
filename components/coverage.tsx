@@ -9,15 +9,10 @@ type Geometry =
   | { type: 'Polygon'; coordinates: Ring[] }
   | { type: 'MultiPolygon'; coordinates: Ring[][] }
 
-type Feature = {
-  type: 'Feature'
-  geometry: Geometry
-}
+type Feature = { type: 'Feature'; geometry: Geometry }
+type FeatureCollection = { type: 'FeatureCollection'; features: Feature[] }
 
-type FeatureCollection = {
-  type: 'FeatureCollection'
-  features: Feature[]
-}
+type Bounds = { minX: number; maxX: number; minY: number; maxY: number }
 
 const SABAH_GEOJSON =
   'https://raw.githubusercontent.com/atifmustaffa/malaysia-geojson/master/states/sabah.district.geojson'
@@ -35,33 +30,16 @@ function collectPositions(geojson: FeatureCollection) {
   })
 }
 
-function project([longitude, latitude]: Position, bounds: { minX: number; maxX: number; minY: number; maxY: number }) {
+function project([longitude, latitude]: Position, bounds: Bounds) {
   const x = MAP_PADDING + ((longitude - bounds.minX) / (bounds.maxX - bounds.minX)) * (MAP_WIDTH - MAP_PADDING * 2)
   const y = MAP_HEIGHT - MAP_PADDING - ((latitude - bounds.minY) / (bounds.maxY - bounds.minY)) * (MAP_HEIGHT - MAP_PADDING * 2)
   return `${x.toFixed(2)},${y.toFixed(2)}`
 }
 
-function MapShape({
-  ring,
-  bounds,
-  index,
-}: {
-  ring: Ring
-  bounds: { minX: number; maxX: number; minY: number; maxY: number }
-  index: number
-}) {
-  return (
-    <polygon
-      key={index}
-      points={ring.map((point) => project(point, bounds)).join(' ')}
-      fill="#dff4f2"
-      stroke={MAP_STROKE}
-      strokeWidth={MAP_STROKE_WIDTH}
-      strokeLinejoin="round"
-      strokeLinecap="round"
-      vectorEffect="non-scaling-stroke"
-    />
-  )
+function getRings(feature: Feature): Ring[] {
+  return feature.geometry.type === 'Polygon'
+    ? feature.geometry.coordinates
+    : feature.geometry.coordinates.flat()
 }
 
 export function Coverage() {
@@ -77,13 +55,12 @@ export function Coverage() {
       .catch(() => {
         if (active) setGeojson(null)
       })
-
     return () => {
       active = false
     }
   }, [])
 
-  const bounds = useMemo(() => {
+  const bounds = useMemo<Bounds | null>(() => {
     if (!geojson) return null
     const positions = collectPositions(geojson)
     const xs = positions.map(([x]) => x)
@@ -114,9 +91,7 @@ export function Coverage() {
           <div className="mt-8 rounded-3xl border border-primary/10 bg-card p-6 shadow-sm">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Currently available
-                </p>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Currently available</p>
                 <h3 className="mt-1 text-2xl font-semibold text-foreground">Sabah</h3>
                 <p className="mt-1 text-sm text-muted-foreground">Malaysia</p>
               </div>
@@ -127,9 +102,7 @@ export function Coverage() {
             <div className="mt-5 h-px bg-border" />
             <div className="mt-4 flex items-center justify-between text-sm">
               <span className="text-muted-foreground">More locations</span>
-              <span className="inline-flex items-center gap-1 font-medium text-foreground">
-                Coming soon <ArrowUpRight className="size-4" />
-              </span>
+              <span className="inline-flex items-center gap-1 font-medium text-foreground">Coming soon <ArrowUpRight className="size-4" /></span>
             </div>
           </div>
         </div>
@@ -144,20 +117,33 @@ export function Coverage() {
                 role="img"
                 aria-label="Map showing Sabah districts"
               >
-                {geojson.features.flatMap((feature, featureIndex) => {
-                  const rings =
-                    feature.geometry.type === 'Polygon'
-                      ? feature.geometry.coordinates
-                      : feature.geometry.coordinates.flat()
-                  return rings.map((ring, ringIndex) => (
-                    <MapShape
-                      key={`${featureIndex}-${ringIndex}`}
-                      ring={ring}
-                      bounds={bounds}
-                      index={ringIndex}
+                {/* District fills are rendered first. */}
+                {geojson.features.map((feature, featureIndex) =>
+                  getRings(feature).map((ring, ringIndex) => (
+                    <polygon
+                      key={`fill-${featureIndex}-${ringIndex}`}
+                      points={ring.map((point) => project(point, bounds)).join(' ')}
+                      fill="#dff4f2"
+                      stroke="none"
                     />
                   ))
-                })}
+                )}
+
+                {/* Every district boundary is rendered in one uniform pass. */}
+                {geojson.features.map((feature, featureIndex) =>
+                  getRings(feature).map((ring, ringIndex) => (
+                    <polyline
+                      key={`line-${featureIndex}-${ringIndex}`}
+                      points={ring.map((point) => project(point, bounds)).join(' ')}
+                      fill="none"
+                      stroke={MAP_STROKE}
+                      strokeWidth={MAP_STROKE_WIDTH}
+                      strokeLinejoin="round"
+                      strokeLinecap="round"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  ))
+                )}
               </svg>
             ) : (
               <div className="h-[360px] w-full max-w-[620px] animate-pulse rounded-[40%] bg-primary/5" />
