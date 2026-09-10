@@ -1,8 +1,99 @@
 'use client'
 
+import { useEffect, useMemo, useState } from 'react'
 import { MapPin, ArrowUpRight } from 'lucide-react'
 
+type Position = [number, number]
+type Ring = Position[]
+type Geometry =
+  | { type: 'Polygon'; coordinates: Ring[] }
+  | { type: 'MultiPolygon'; coordinates: Ring[][] }
+
+type Feature = {
+  type: 'Feature'
+  geometry: Geometry
+}
+
+type FeatureCollection = {
+  type: 'FeatureCollection'
+  features: Feature[]
+}
+
+const SABAH_GEOJSON =
+  'https://raw.githubusercontent.com/atifmustaffa/malaysia-geojson/master/states/sabah.district.geojson'
+
+const MAP_WIDTH = 620
+const MAP_HEIGHT = 500
+const MAP_PADDING = 24
+
+function collectPositions(geojson: FeatureCollection) {
+  return geojson.features.flatMap((feature) => {
+    if (feature.geometry.type === 'Polygon') return feature.geometry.coordinates.flat()
+    return feature.geometry.coordinates.flat(2)
+  })
+}
+
+function project([longitude, latitude]: Position, bounds: { minX: number; maxX: number; minY: number; maxY: number }) {
+  const x = MAP_PADDING + ((longitude - bounds.minX) / (bounds.maxX - bounds.minX)) * (MAP_WIDTH - MAP_PADDING * 2)
+  const y = MAP_HEIGHT - MAP_PADDING - ((latitude - bounds.minY) / (bounds.maxY - bounds.minY)) * (MAP_HEIGHT - MAP_PADDING * 2)
+  return `${x.toFixed(2)},${y.toFixed(2)}`
+}
+
+function MapShape({
+  ring,
+  bounds,
+  index,
+}: {
+  ring: Ring
+  bounds: { minX: number; maxX: number; minY: number; maxY: number }
+  index: number
+}) {
+  return (
+    <polygon
+      key={index}
+      points={ring.map((point) => project(point, bounds)).join(' ')}
+      fill="#dff4f2"
+      stroke="#3f5d63"
+      strokeWidth="2.4"
+      strokeLinejoin="round"
+      strokeLinecap="round"
+      vectorEffect="non-scaling-stroke"
+    />
+  )
+}
+
 export function Coverage() {
+  const [geojson, setGeojson] = useState<FeatureCollection | null>(null)
+
+  useEffect(() => {
+    let active = true
+    fetch(SABAH_GEOJSON)
+      .then((response) => response.json())
+      .then((data: FeatureCollection) => {
+        if (active) setGeojson(data)
+      })
+      .catch(() => {
+        if (active) setGeojson(null)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const bounds = useMemo(() => {
+    if (!geojson) return null
+    const positions = collectPositions(geojson)
+    const xs = positions.map(([x]) => x)
+    const ys = positions.map(([, y]) => y)
+    return {
+      minX: Math.min(...xs),
+      maxX: Math.max(...xs),
+      minY: Math.min(...ys),
+      maxY: Math.max(...ys),
+    }
+  }, [geojson])
+
   return (
     <section id="coverage" className="relative overflow-hidden bg-background py-24 sm:py-32">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 md:grid-cols-[0.9fr_1.1fr] md:px-8">
@@ -44,11 +135,32 @@ export function Coverage() {
         <div className="relative min-h-[420px] overflow-hidden rounded-[2rem] border border-border/70 bg-[#eef7f5] p-5 shadow-sm sm:p-8">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(20,150,145,0.13),transparent_55%)]" />
           <div className="relative flex h-full min-h-[380px] items-center justify-center">
-            <img
-              src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Sabah_in_Malaysia.svg"
-              alt="Map showing Sabah in Malaysia"
-              className="max-h-[360px] w-full object-contain drop-shadow-xl"
-            />
+            {geojson && bounds ? (
+              <svg
+                viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
+                className="max-h-[390px] w-full max-w-[620px] overflow-visible"
+                role="img"
+                aria-label="Map showing Sabah districts"
+              >
+                {geojson.features.flatMap((feature, featureIndex) => {
+                  const rings =
+                    feature.geometry.type === 'Polygon'
+                      ? feature.geometry.coordinates
+                      : feature.geometry.coordinates.flat()
+                  return rings.map((ring, ringIndex) => (
+                    <MapShape
+                      key={`${featureIndex}-${ringIndex}`}
+                      ring={ring}
+                      bounds={bounds}
+                      index={ringIndex}
+                    />
+                  ))
+                })}
+              </svg>
+            ) : (
+              <div className="h-[360px] w-full max-w-[620px] animate-pulse rounded-[40%] bg-primary/5" />
+            )}
+
             <div className="absolute bottom-4 left-4 rounded-2xl border border-white/70 bg-white/90 px-4 py-3 shadow-lg backdrop-blur-md sm:bottom-7 sm:left-7">
               <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                 <span className="size-2.5 rounded-full bg-primary shadow-[0_0_0_5px_rgba(20,150,145,0.12)]" />
