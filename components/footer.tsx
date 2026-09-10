@@ -12,7 +12,7 @@ export function Footer() {
   return (
     <footer
       className="relative text-white/70"
-      style={{ background: 'oklch(0.2 0.04 158)' }}
+      style={{ background: '#071B34' }}
     >
       <div className="mx-auto max-w-7xl px-5 py-14 md:px-8">
         <div className="flex flex-col justify-between gap-10 md:flex-row md:items-start">
