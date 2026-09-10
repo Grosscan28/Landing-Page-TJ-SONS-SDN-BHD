@@ -51,6 +51,11 @@ export function CoverageMap() {
     return { minLon: Math.min(...points.map((point) => point[0])), maxLon: Math.max(...points.map((point) => point[0])), minLat: Math.min(...points.map((point) => point[1])), maxLat: Math.max(...points.map((point) => point[1])) }
   }, [data])
 
+  const hoveredFeature = data?.features.find((feature) => {
+    const name = feature.properties.state_name ?? feature.properties.name ?? feature.id ?? 'Unknown state'
+    return name === hovered
+  })
+
   return (
     <section id="coverage" className="relative overflow-hidden bg-background py-24 sm:py-32">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
@@ -78,27 +83,58 @@ export function CoverageMap() {
                   <defs>
                     <filter id="stateShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="6" stdDeviation="6" floodOpacity="0.14" /></filter>
                   </defs>
-                  {data.features.map((feature) => {
-                    const name = feature.properties.state_name ?? feature.properties.name ?? feature.id ?? 'Unknown state'
+
+                  {/* Map layer: every state is rendered first. */}
+                  <g>
+                    {data.features.map((feature) => {
+                      const name = feature.properties.state_name ?? feature.properties.name ?? feature.id ?? 'Unknown state'
+                      const available = availableStates.has(name)
+                      const active = hovered === name
+                      return (
+                        <g
+                          key={name}
+                          tabIndex={0}
+                          role="button"
+                          aria-label={`${name}: ${available ? 'Available' : 'Coming soon'}`}
+                          onMouseEnter={() => setHovered(name)}
+                          onMouseLeave={() => setHovered(null)}
+                          onFocus={() => setHovered(name)}
+                          onBlur={() => setHovered(null)}
+                        >
+                          <path
+                            d={geometryPath(feature.geometry, bounds)}
+                            fill={available ? '#b9f2d4' : active ? '#dcecff' : '#edf2f7'}
+                            stroke={active ? '#1683ee' : '#ffffff'}
+                            strokeWidth={active ? 3 : 1.8}
+                            vectorEffect="non-scaling-stroke"
+                            className="cursor-pointer transition-all duration-200"
+                            style={{ filter: active ? 'url(#stateShadow)' : undefined }}
+                          />
+                        </g>
+                      )
+                    })}
+                  </g>
+
+                  {/* Hover layer: deliberately rendered after the map, so no neighbouring state can cover it. */}
+                  {hoveredFeature && (() => {
+                    const name = hoveredFeature.properties.state_name ?? hoveredFeature.properties.name ?? hoveredFeature.id ?? 'Unknown state'
                     const available = availableStates.has(name)
-                    const active = hovered === name
-                    const [cx, cy] = project(featureCenter(feature), bounds).split(',').map(Number)
-                    const tooltipX = Math.min(Math.max(cx - 62, 8), 868)
-                    const placeBelow = cy < 72
-                    const tooltipY = placeBelow ? cy + 14 : Math.max(cy - 54, 8)
+                    const [cx, cy] = project(featureCenter(hoveredFeature), bounds).split(',').map(Number)
+                    const tooltipWidth = 164
+                    const tooltipHeight = 60
+                    const tooltipX = Math.min(Math.max(cx - tooltipWidth / 2, 8), 828)
+                    const placeBelow = cy < tooltipHeight + 22
+                    const tooltipY = placeBelow ? cy + 14 : Math.max(cy - tooltipHeight - 14, 8)
                     return (
-                      <g key={name} tabIndex={0} role="button" aria-label={`${name}: ${available ? 'Available' : 'Coming soon'}`} onMouseEnter={() => setHovered(name)} onMouseLeave={() => setHovered(null)} onFocus={() => setHovered(name)} onBlur={() => setHovered(null)}>
-                        <path d={geometryPath(feature.geometry, bounds)} fill={available ? '#b9f2d4' : active ? '#dcecff' : '#edf2f7'} stroke={active ? '#1683ee' : '#ffffff'} strokeWidth={active ? 3 : 1.8} vectorEffect="non-scaling-stroke" className="cursor-pointer transition-all duration-200" style={{ filter: active ? 'url(#stateShadow)' : undefined }} />
-                        {active && (
-                          <g pointerEvents="none">
-                            <rect x={tooltipX} y={tooltipY} width="124" height="48" rx="12" fill="#071b34" opacity="0.97" />
-                            <text x={tooltipX + 62} y={tooltipY + 20} textAnchor="middle" fill="white" fontSize="13" fontWeight="700">{name}</text>
-                            <text x={tooltipX + 62} y={tooltipY + 37} textAnchor="middle" fill={available ? '#72e4aa' : '#b9c8da'} fontSize="10.5" fontWeight="600">{available ? '● Available' : 'Coming soon'}</text>
-                          </g>
-                        )}
+                      <g pointerEvents="none">
+                        <line x1={cx} y1={cy} x2={cx} y2={placeBelow ? tooltipY : tooltipY + tooltipHeight} stroke="#0b2a4e" strokeOpacity="0.18" strokeWidth="1.5" />
+                        <rect x={tooltipX} y={tooltipY} width={tooltipWidth} height={tooltipHeight} rx="16" fill="#071b34" opacity="0.98" filter="url(#stateShadow)" />
+                        <circle cx={tooltipX + 20} cy={tooltipY + 21} r="5" fill={available ? '#27c878' : '#94a9c2'} />
+                        <text x={tooltipX + 34} y={tooltipY + 25} fill="white" fontSize="14" fontWeight="700">{name}</text>
+                        <text x={tooltipX + 34} y={tooltipY + 46} fill={available ? '#72e4aa' : '#b7c6d9'} fontSize="11" fontWeight="600">{available ? 'Available' : 'Coming soon'}</text>
                       </g>
                     )
-                  })}
+                  })()}
                 </svg>
               ) : <div className="grid h-full place-items-center text-sm text-muted-foreground">Loading Malaysia coverage map…</div>}
             </div>
