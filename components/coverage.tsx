@@ -25,6 +25,8 @@ const SABAH_GEOJSON =
 const MAP_WIDTH = 620
 const MAP_HEIGHT = 500
 const MAP_PADDING = 24
+const MAP_STROKE = '#3f5d63'
+const MAP_STROKE_WIDTH = 2.4
 
 function collectPositions(geojson: FeatureCollection) {
   return geojson.features.flatMap((feature) => {
@@ -53,8 +55,8 @@ function MapShape({
       key={index}
       points={ring.map((point) => project(point, bounds)).join(' ')}
       fill="#dff4f2"
-      stroke="#3f5d63"
-      strokeWidth="2.4"
+      stroke={MAP_STROKE}
+      strokeWidth={MAP_STROKE_WIDTH}
       strokeLinejoin="round"
       strokeLinecap="round"
       vectorEffect="non-scaling-stroke"
