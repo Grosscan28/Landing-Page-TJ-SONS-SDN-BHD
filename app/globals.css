@@ -27,19 +27,19 @@
   --color-forest-deep: var(--brand-dark);
   --color-emerald: var(--brand-teal);
   --color-lime: var(--brand-gold);
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 10px);
-  --radius-3xl: calc(var(--radius) + 18px);
+  --radius-xl: calc(var(--radius) + 2px);
+  --radius-2xl: calc(var(--radius) + 4px);
+  --radius-3xl: calc(var(--radius) + 8px);
 }
 
 :root {
   color-scheme: light;
-  --radius: 1rem;
+  --radius: 0.75rem;
   --background: oklch(0.985 0.008 220);
   --foreground: oklch(0.17 0.035 235);
   --card: oklch(1 0 0);
@@ -70,7 +70,7 @@
   * { @apply border-border outline-ring/50; }
   html { scroll-behavior: smooth; }
   body { @apply bg-background text-foreground font-sans antialiased; -webkit-font-smoothing: antialiased; }
-  h1, h2, h3, h4 { @apply font-display; letter-spacing: -0.02em; }
+  h1, h2, h3, h4 { @apply font-display; letter-spacing: -0.015em; }
 }
 
 @layer utilities {
@@ -97,5 +97,5 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
-  .motion-safe\:animate-\[marquee_30s_linear_infinite\] { animation: none !important; }
+  .motion-safe\\:animate-\\[marquee_30s_linear_infinite\\] { animation: none !important; }
 }
