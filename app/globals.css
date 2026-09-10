@@ -39,28 +39,31 @@
 
 :root {
   color-scheme: light;
-  --radius: 0.9rem;
-  --background: oklch(0.985 0.008 85);
-  --foreground: oklch(0.19 0.015 30);
+  --radius: 1rem;
+  --background: oklch(0.985 0.008 220);
+  --foreground: oklch(0.17 0.035 235);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.19 0.015 30);
+  --card-foreground: oklch(0.17 0.035 235);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.19 0.015 30);
-  --primary: oklch(0.60 0.205 28);
-  --primary-foreground: oklch(0.99 0.005 85);
-  --secondary: oklch(0.94 0.012 85);
-  --secondary-foreground: oklch(0.23 0.02 30);
-  --muted: oklch(0.955 0.01 85);
-  --muted-foreground: oklch(0.47 0.018 30);
-  --accent: oklch(0.93 0.04 85);
-  --accent-foreground: oklch(0.27 0.02 30);
+  --popover-foreground: oklch(0.17 0.035 235);
+  --primary: oklch(0.49 0.19 255);
+  --primary-foreground: oklch(0.99 0.005 220);
+  --secondary: oklch(0.95 0.018 220);
+  --secondary-foreground: oklch(0.23 0.04 235);
+  --muted: oklch(0.955 0.012 220);
+  --muted-foreground: oklch(0.46 0.035 235);
+  --accent: oklch(0.93 0.045 205);
+  --accent-foreground: oklch(0.25 0.05 235);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.89 0.01 80);
-  --input: oklch(0.89 0.01 80);
-  --ring: oklch(0.60 0.205 28);
-  --brand-dark: oklch(0.22 0.018 30);
-  --brand-teal: oklch(0.63 0.10 195);
+  --border: oklch(0.89 0.02 220);
+  --input: oklch(0.89 0.02 220);
+  --ring: oklch(0.49 0.19 255);
+  --brand-dark: oklch(0.20 0.045 235);
+  --brand-blue: oklch(0.49 0.19 255);
+  --brand-sky: oklch(0.70 0.12 220);
+  --brand-teal: oklch(0.67 0.10 195);
   --brand-gold: oklch(0.82 0.13 88);
+  --available: oklch(0.72 0.18 150);
 }
 
 @layer base {
@@ -72,7 +75,7 @@
 
 @layer utilities {
   .brand-gradient-text {
-    background-image: linear-gradient(100deg, var(--primary), var(--brand-gold) 55%, var(--brand-teal));
+    background-image: linear-gradient(100deg, var(--brand-blue), var(--brand-sky) 55%, var(--brand-teal));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
