@@ -21,7 +21,7 @@ const SABAH_GEOJSON =
 const MAP_WIDTH = 620
 const MAP_HEIGHT = 500
 const MAP_PADDING = 24
-const MAP_STROKE = '#3f5d63'
+const MAP_STROKE = '#6f8588'
 const MAP_STROKE_WIDTH = 1.2
 
 function collectPositions(geojson: FeatureCollection) {
@@ -166,6 +166,7 @@ export function Coverage() {
                   d={boundaryPath}
                   fill="none"
                   stroke={MAP_STROKE}
+                  strokeOpacity="0.72"
                   strokeWidth={MAP_STROKE_WIDTH}
                   strokeLinejoin="round"
                   strokeLinecap="round"
