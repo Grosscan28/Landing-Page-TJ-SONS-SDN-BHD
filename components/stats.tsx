@@ -1,5 +1,7 @@
-import { CountUp } from '@/components/count-up'
+'use client'
+
 import { Reveal } from '@/components/reveal'
+import { CountUp } from '@/components/count-up'
 import { media } from '@/lib/media'
 
 const stats = [
@@ -10,69 +12,42 @@ const stats = [
 ]
 
 export function Stats() {
-  return (
-    <section className="relative overflow-hidden py-24 md:py-28">
-      {/* Deep forest gradient band */}
-      <div
-        aria-hidden
-        className="absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(120deg, oklch(0.27 0.05 158) 0%, oklch(0.44 0.09 156) 55%, oklch(0.34 0.07 160) 100%)',
-        }}
-      />
-      <div
-        aria-hidden
-        className="absolute inset-0 opacity-60"
-        style={{
-          background:
-            'radial-gradient(90% 120% at 85% 10%, oklch(0.82 0.19 130 / 0.16) 0%, transparent 55%)',
-        }}
-      />
+  const logos = [...media.vendorLogos, ...media.vendorLogos]
 
+  return (
+    <section className="relative overflow-hidden bg-[#151719] py-24 md:py-28">
+      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_12%_10%,rgba(208,34,45,0.20),transparent_35%),radial-gradient(circle_at_90%_80%,rgba(20,132,150,0.16),transparent_35%)]" />
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
         <Reveal className="mx-auto mb-14 max-w-2xl text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-lime">
-            The Proof
-          </p>
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-[#e33a46]">The Proof</p>
           <h2 className="text-balance text-3xl font-semibold leading-tight text-white sm:text-4xl">
-            Numbers and registered vendors that reflect our commitment
+            Experience you can see in every project
           </h2>
         </Reveal>
 
-        {/* Numbers */}
         <div className="grid gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, i) => (
-            <Reveal
-              key={stat.label}
-              delay={i * 100}
-              className="border-white/15 text-center lg:border-l lg:first:border-l-0"
-            >
+            <Reveal key={stat.label} delay={i * 100} className="border-white/10 text-center lg:border-l lg:first:border-l-0">
               <p className="font-display text-4xl font-semibold text-white sm:text-5xl">
                 <CountUp end={stat.end} suffix={stat.suffix} />
               </p>
-              <p className="mt-3 text-sm font-medium text-white/75">{stat.label}</p>
+              <p className="mt-3 text-sm font-medium text-white/60">{stat.label}</p>
             </Reveal>
           ))}
         </div>
 
-        {/* Vendor logos grid */}
-<Reveal delay={200} className="mt-20">
-  <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
-    Trusted by these companies
-  </p>
-  <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6">
-    {media.vendorLogos.map((src) => (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        key={src}
-        src={src || '/placeholder.svg'}
-        alt="Vendor company logo"
-        className="h-10 w-auto object-contain opacity-90 transition-opacity duration-200 hover:opacity-100 sm:h-12"
-      />
-    ))}
-  </div>
-</Reveal>
+        <Reveal delay={200} className="mt-20 overflow-hidden">
+          <p className="mb-7 text-center text-xs font-semibold uppercase tracking-[0.2em] text-white/45">Trusted by leading companies</p>
+          <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+            <div className="flex w-max items-center gap-12 motion-safe:animate-[marquee_30s_linear_infinite] hover:[animation-play-state:paused]">
+              {logos.map((src, i) => (
+                <div key={`${src}-${i}`} className="flex h-16 w-40 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-5 backdrop-blur-sm">
+                  <img src={src} alt="Vendor company logo" className="max-h-11 max-w-[130px] w-auto object-contain" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   )
