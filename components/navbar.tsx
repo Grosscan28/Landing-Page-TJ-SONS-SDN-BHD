@@ -8,6 +8,7 @@ import { media, whatsappLink } from '@/lib/media'
 const links = [
   { label: 'About', href: '#about' },
   { label: 'Services', href: '#services' },
+  { label: 'Our Work', href: '#our-work' },
   { label: 'Coverage', href: '#coverage' },
   { label: 'Contact', href: '#contact' },
 ]
@@ -17,102 +18,85 @@ export function Navbar() {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-
+    const onScroll = () => setScrolled(window.scrollY > 24)
     onScroll()
-
     window.addEventListener('scroll', onScroll, { passive: true })
-
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
+    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-5">
       <nav
         className={cn(
-          'mx-auto flex h-14 max-w-7xl items-center justify-between rounded-2xl border px-3 transition-all duration-300 sm:h-16 sm:px-5',
+          'mx-auto flex h-[62px] max-w-6xl items-center justify-between rounded-full border px-3 transition-all duration-300 sm:px-4',
           scrolled
-            ? 'border-primary/15 bg-white/85 text-foreground shadow-[0_12px_40px_rgba(10,65,130,0.10)] backdrop-blur-xl'
-            : 'border-white/20 bg-slate-950/20 text-white shadow-[0_10px_35px_rgba(0,0,0,0.12)] backdrop-blur-xl'
+            ? 'border-slate-200/80 bg-white/92 shadow-[0_10px_35px_rgba(15,23,42,0.10)] backdrop-blur-xl'
+            : 'border-white/25 bg-white/12 shadow-[0_8px_30px_rgba(0,0,0,0.10)] backdrop-blur-md'
         )}
       >
-        {/* Company Logo */}
-        <a
-          href="#top"
-          className="flex items-center gap-2.5 font-display text-sm font-semibold tracking-tight sm:text-base"
-        >
+        <a href="#top" className="flex min-w-0 items-center gap-3 pl-1">
           <img
             src={media.companyLogo}
             alt="TJ & SONS HOLDINGS SDN BHD"
-            className="h-9 w-auto object-contain sm:h-10"
+            className="h-9 w-auto shrink-0 object-contain sm:h-10"
           />
-
-          <span className="hidden sm:inline">
+          <span
+            className={cn(
+              'hidden truncate text-[13px] font-semibold tracking-tight sm:block lg:text-sm',
+              scrolled ? 'text-slate-900' : 'text-white'
+            )}
+          >
             TJ & SONS HOLDINGS SDN BHD
           </span>
-
-          <span className="sm:hidden">
+          <span className={cn('text-sm font-semibold sm:hidden', scrolled ? 'text-slate-900' : 'text-white')}>
             TJ & SONS
           </span>
         </a>
 
-        {/* Desktop Navigation */}
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-1 md:flex">
           {links.map((link) => (
             <a
               key={link.href}
               href={link.href}
               className={cn(
-                'text-sm font-medium transition-colors hover:text-primary',
+                'rounded-full px-3.5 py-2 text-[13px] font-medium transition-colors',
                 scrolled
-                  ? 'text-foreground/70'
-                  : 'text-white/90'
+                  ? 'text-slate-600 hover:bg-slate-100 hover:text-slate-950'
+                  : 'text-white/90 hover:bg-white/12 hover:text-white'
               )}
             >
               {link.label}
             </a>
           ))}
-
-          {/* Request Service */}
           <a
             href={whatsappLink()}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all duration-200 hover:-translate-y-0.5 hover:brightness-110 hover:shadow-primary/30"
+            className="ml-2 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-[13px] font-semibold text-white shadow-sm transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-md"
           >
-            <MessageCircle className="size-4 transition-transform duration-200 group-hover:scale-110" />
+            <MessageCircle className="size-4" />
             Request Service
           </a>
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           type="button"
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
           className={cn(
-            'grid size-10 place-items-center rounded-xl transition-colors md:hidden',
-            scrolled
-              ? 'text-foreground hover:bg-muted'
-              : 'text-white hover:bg-white/10'
+            'grid size-10 place-items-center rounded-full md:hidden',
+            scrolled ? 'text-slate-900 hover:bg-slate-100' : 'text-white hover:bg-white/10'
           )}
         >
-          {open ? (
-            <X className="size-6" />
-          ) : (
-            <Menu className="size-6" />
-          )}
+          {open ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
       </nav>
 
-      {/* Mobile Navigation */}
       <div
         className={cn(
-          'mx-auto mt-2 max-w-7xl overflow-hidden rounded-2xl border border-primary/10 bg-white/95 shadow-xl backdrop-blur-xl transition-[max-height,opacity] duration-300 md:hidden',
-          open
-            ? 'max-h-96 opacity-100'
-            : 'max-h-0 opacity-0'
+          'mx-auto mt-3 max-w-6xl overflow-hidden rounded-3xl border border-slate-200/80 bg-white/96 shadow-xl backdrop-blur-xl transition-all duration-300 md:hidden',
+          open ? 'max-h-[420px] opacity-100' : 'max-h-0 border-transparent opacity-0'
         )}
       >
         <div className="flex flex-col gap-1 p-3">
@@ -121,19 +105,17 @@ export function Navbar() {
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className="rounded-xl px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-primary/5 hover:text-primary"
+              className="rounded-2xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-950"
             >
               {link.label}
             </a>
           ))}
-
-          {/* Mobile Request Service */}
           <a
             href={whatsappLink()}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setOpen(false)}
-            className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground"
+            className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white"
           >
             <MessageCircle className="size-4" />
             Request Service via WhatsApp
